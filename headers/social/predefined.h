@@ -4,8 +4,10 @@
 #include <stdbool.h>
 
 #define GRID_SIZE 60
+#define IMPACT 10
 #define NUM_FAKE_NEWS_SOURCES 2
 #define NUM_REAL_NEWS_SOURCES 6
+#define FAKE_BIAS 2
 #define PROPAGATION_CYCLES 10000
 
 typedef struct _pos {

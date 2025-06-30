@@ -39,14 +39,14 @@ void initialize_map(void) {
 
     // Propagation rates for each income group.
     // Higher rate means opinions spread more easily.
-    float poor_propagate_rate = 0.15f;
-    float working_propagate_rate = 0.12f;
-    float middle_propagate_rate = 0.09f;
-    float rich_propagate_rate = 0.06f;
+    float poor_propagate_rate = 0.12f;
+    float working_propagate_rate = 0.09f;
+    float middle_propagate_rate = 0.06f;
+    float rich_propagate_rate = 0.03f;
 
     for (int i = 0; i < GRID_SIZE; i++) {
         for (int j = 0; j < GRID_SIZE; j++) {
-            float random_value = (float)rand() / RAND_MAX; // Get random float between 0.0 and 1.0
+            float random_value = (float)rand() / (float)RAND_MAX; // Get random float between 0.0 and 1.0
 
             // Assign political coordinate and propagation rate based on residential income area
             if (i < poor_area_end_row) { // Poor residential area
@@ -186,7 +186,11 @@ int main(void) {
             current_pos.x = rand() % GRID_SIZE; // Column index
             current_pos.y = rand() % GRID_SIZE; // Row index
         
-            float random_bias_for_news = (float)rand() / RAND_MAX; // Random factor for news content variation
+            float random_bias_for_news = 0.5f - (float)rand() / (float)RAND_MAX; // Random factor for news content variation
+            random_bias_for_news *= FAKE_BIAS;
+            random_bias_for_news = 0.5f - random_bias_for_news;
+            //scale bias, fake news is intended to spread more biased information
+
         
             // Determine news content (political_coordinate) based on the social class
             // of the randomly chosen news source's origin area (current_pos.y for row).
@@ -205,10 +209,16 @@ int main(void) {
         
             // Access relational_map using [row][column] convention: relational_map[y][x]
             relational_map[current_pos.y][current_pos.x].political_coordinate = news_coord;
-            relational_map[current_pos.y][current_pos.x].propagate_rate = 0.8f; // High propagation rate for news source
-            __propagate_state__(current_pos, news_coord * 0.8f); // Propagate news with scaled effect
+            relational_map[current_pos.y][current_pos.x].propagate_rate = 0.6f; // High propagation rate for news source
+            __propagate_state__(current_pos, news_coord * 0.6f); // Propagate news with scaled effect
         }
-        
+        // Indicate incidents with high impact(e,g. political scandles)
+        float national_shock = 0.0f;
+        if(rand()%10000<3) {
+            national_shock = 0.5f;
+            national_shock -= ((float)rand() / (float)RAND_MAX);
+            national_shock *= IMPACT;
+        }
         // Real news propagation
         for (int i = 0; i < NUM_REAL_NEWS_SOURCES; i++) {
             initialize_boolean(); // External function call
@@ -216,7 +226,7 @@ int main(void) {
             current_pos.x = rand() % GRID_SIZE; // Column index
             current_pos.y = rand() % GRID_SIZE; // Row index
         
-            float random_bias_for_news = (float)rand() / RAND_MAX; // Random factor for news content variation
+            float random_bias_for_news = (float)rand() / (float)RAND_MAX; // Random factor for news content variation
         
             // Determine news content (political_coordinate) based on the social class
             // of the randomly chosen news source's origin area (current_pos.y for row).
@@ -229,14 +239,15 @@ int main(void) {
             } else { // News from Rich area
                 news_coord = news_rich_min + random_bias_for_news * (news_rich_max - news_rich_min);
             }
-        
+
             // Ensure news_coord is within valid range [0.0, 1.0]
+            news_coord += national_shock;
             news_coord = fmax(0.0f, fmin(1.0f, news_coord));
         
             // Access relational_map using [row][column] convention: relational_map[y][x]
             relational_map[current_pos.y][current_pos.x].political_coordinate = news_coord;
-            relational_map[current_pos.y][current_pos.x].propagate_rate = 0.8f; // High propagation rate for news source
-            __propagate_state__(current_pos, news_coord * 0.8f); // Propagate news with scaled effect
+            relational_map[current_pos.y][current_pos.x].propagate_rate = 0.7f; // High propagation rate for news source
+            __propagate_state__(current_pos, news_coord * 0.7f); // Propagate news with scaled effect
             initialize_boolean(); // Additional external function call
         }
     
