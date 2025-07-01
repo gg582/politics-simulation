@@ -36,8 +36,15 @@ void __propagate_state__(pos cursor, float news_political_coordinate) {
         } else if(abs(relational_map[current.x][current.y].political_coordinate - news_political_coordinate) > 0.5) {
             relational_map[current.x][current.y].political_coordinate *= 1.01;
         }
+        float scaled_coordinates = relational_map[current.x][current.y].political_coordinate;        // Visit neighbors
 
-        // Visit neighbors
+        float scaled_propagate_rate = relational_map[current.x][current.y].propagate_rate;
+        scaled_coordinates = fmax(0.0f, fmin(1.0f, scaled_coordinates));
+        scaled_propagate_rate = fmax(0.0f, fmin(1.0f, scaled_propagate_rate));
+        relational_map[current.x][current.y].political_coordinate = scaled_coordinates;
+        relational_map[current.x][current.y].propagate_rate = scaled_propagate_rate;
+
+
         pos neighbors[4] = {
             {current.x + 1, current.y},
             {current.x - 1, current.y},

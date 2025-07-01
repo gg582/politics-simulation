@@ -210,7 +210,9 @@ int main(void) {
             // Access relational_map using [row][column] convention: relational_map[y][x]
             relational_map[current_pos.y][current_pos.x].political_coordinate = news_coord;
             relational_map[current_pos.y][current_pos.x].propagate_rate = 0.6f; // High propagation rate for news source
-            __propagate_state__(current_pos, news_coord * 0.6f); // Propagate news with scaled effect
+            for(int news_propagate = 0; news_propagate < NEWS_PROPAGATE_DAYS; news_propagate++) {
+                __propagate_state__(current_pos, news_coord * 0.6f); // Propagate news with scaled effect
+            }
         }
         // Indicate incidents with high impact(e,g. political scandles)
         float national_shock = 0.0f;
@@ -247,7 +249,9 @@ int main(void) {
             // Access relational_map using [row][column] convention: relational_map[y][x]
             relational_map[current_pos.y][current_pos.x].political_coordinate = news_coord;
             relational_map[current_pos.y][current_pos.x].propagate_rate = 0.7f; // High propagation rate for news source
-            __propagate_state__(current_pos, news_coord * 0.7f); // Propagate news with scaled effect
+            for(int news_propagate = 0; news_propagate < NEWS_PROPAGATE_DAYS; news_propagate++) {
+                __propagate_state__(current_pos, news_coord * 0.7f); // Propagate news with scaled effect
+            }
             initialize_boolean(); // Additional external function call
         }
     

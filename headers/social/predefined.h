@@ -7,7 +7,8 @@
 #define IMPACT 10
 #define NUM_FAKE_NEWS_SOURCES 2
 #define NUM_REAL_NEWS_SOURCES 6
-#define FAKE_BIAS 2
+#define FAKE_BIAS 3
+#define NEWS_PROPAGATE_DAYS 30
 #define PROPAGATION_CYCLES 10000
 
 typedef struct _pos {
